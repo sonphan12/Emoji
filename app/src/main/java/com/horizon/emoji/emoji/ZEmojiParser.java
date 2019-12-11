@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ZEmojiParser {
+public final class ZEmojiParser {
     private static final String TAG = ZEmojiParser.class.getSimpleName();
 
     private static Pattern ALIAS_PATTERN = Pattern.compile("(:\\d\\d:)");
@@ -55,6 +55,9 @@ public class ZEmojiParser {
     private static Bitmap emojiSheet;
 
     private static Map<CharSequence, DrawableInfo> emojiMap = new HashMap<>();
+
+    private ZEmojiParser() {
+    }
 
     public static void init(Context context) {
         loadEmojiSheet(context);
