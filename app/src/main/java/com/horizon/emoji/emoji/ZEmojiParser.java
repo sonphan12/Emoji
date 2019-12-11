@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Paint;
+import android.graphics.Paint.FontMetricsInt;
 import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -60,7 +61,7 @@ public class ZEmojiParser {
         buildEmojiMap();
     }
 
-    public static CharSequence parse(String text, Paint.FontMetricsInt fontMetrics) {
+    public static CharSequence parse(String text, FontMetricsInt fontMetrics) {
 
         Spannable emojiText = Spannable.Factory.getInstance().newSpannable(text);
 
@@ -162,10 +163,10 @@ public class ZEmojiParser {
     }
 
     private static class EmojiSpan extends ImageSpan {
-        private Paint.FontMetricsInt fontMetrics;
+        private FontMetricsInt fontMetrics;
         private int size;
 
-        EmojiSpan(EmojiDrawable d, int verticalAlignment, Paint.FontMetricsInt original) {
+        EmojiSpan(EmojiDrawable d, int verticalAlignment, FontMetricsInt original) {
             super(d, verticalAlignment);
 
             fontMetrics = original;
@@ -176,40 +177,17 @@ public class ZEmojiParser {
 
             //Fallback size
             if (size == 0) {
-                size = Utils.dp(10);
+                size = Utils.dp(20);
+            }
+
+            if (getDrawable() != null) {
+                getDrawable().setBounds(0, 0, size, size);
             }
         }
 
         @Override
-        public int getSize(@NonNull Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
-            if (fm == null) {
-                fm = new Paint.FontMetricsInt();
-            }
-
-            if (fontMetrics == null) {
-                int sz = super.getSize(paint, text, start, end, fm);
-
-                int offset = Utils.dp(8);
-                int w = Utils.dp(10);
-                fm.top = -w - offset;
-                fm.bottom = w - offset;
-                fm.ascent = -w - offset;
-                fm.leading = 0;
-                fm.descent = w - offset;
-
-                return sz;
-            } else {
-                fm.ascent = fontMetrics.ascent;
-                fm.descent = fontMetrics.descent;
-
-                fm.top = fontMetrics.top;
-                fm.bottom = fontMetrics.bottom;
-
-                if (getDrawable() != null) {
-                    getDrawable().setBounds(0, 0, size, size);
-                }
-                return size;
-            }
+        public int getSize(@NonNull Paint paint, CharSequence text, int start, int end, FontMetricsInt fm) {
+            return size;
         }
     }
 }
