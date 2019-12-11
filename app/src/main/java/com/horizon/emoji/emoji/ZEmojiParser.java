@@ -61,9 +61,13 @@ public class ZEmojiParser {
         buildEmojiMap();
     }
 
-    public static CharSequence parse(String text, FontMetricsInt fontMetrics) {
-
-        Spannable emojiText = Spannable.Factory.getInstance().newSpannable(text);
+    public static CharSequence parse(CharSequence text, FontMetricsInt fontMetrics) {
+        Spannable emojiText;
+        if (text instanceof Spannable) {
+            emojiText = (Spannable) text;
+        } else {
+            emojiText = Spannable.Factory.getInstance().newSpannable(text);
+        }
 
         Matcher matcher = ALIAS_PATTERN.matcher(text);
 
