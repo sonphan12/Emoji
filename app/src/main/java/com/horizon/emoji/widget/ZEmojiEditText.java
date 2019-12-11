@@ -31,21 +31,14 @@ public class ZEmojiEditText extends AppCompatEditText {
 
     private static class EmojiTextWatcher implements TextWatcher {
 
-        private ZEmojiEditText mEmojiEditText;
+        ZEmojiEditText mEmojiEditText;
 
         EmojiTextWatcher(ZEmojiEditText emojiEditText) {
             mEmojiEditText = emojiEditText;
         }
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-            CharSequence parsedCharSequence =
-                    ZEmojiParser.parse(s.toString(), mEmojiEditText.getPaint().getFontMetricsInt());
-            mEmojiEditText.removeTextChangedListener(this);
-            mEmojiEditText.setText(parsedCharSequence);
-            mEmojiEditText.setSelection(start + count);
-            mEmojiEditText.addTextChangedListener(this);
-        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -53,6 +46,7 @@ public class ZEmojiEditText extends AppCompatEditText {
 
         @Override
         public void afterTextChanged(Editable s) {
+            ZEmojiParser.parse(s, mEmojiEditText.getPaint().getFontMetricsInt());
         }
     }
 }
