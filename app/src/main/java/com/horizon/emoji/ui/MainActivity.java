@@ -17,6 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
         TextView textEmoji = findViewById(R.id.textEmoji);
 
-        textEmoji.setText(ZEmojiParser.parse("hello :11: :01:", textEmoji.getPaint().getFontMetricsInt()));
+        textEmoji.setText(ZEmojiParser.parse("g:11::01:ố:11:g:11::01:ố:01:g:11::01:ố:01:g:11::01:ố:01:"));
     }
 }

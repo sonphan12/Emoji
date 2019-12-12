@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import com.horizon.emoji.Utils;
 
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -61,7 +62,7 @@ public class ZEmojiParser {
         buildEmojiMap();
     }
 
-    public static CharSequence parse(CharSequence text, FontMetricsInt fontMetrics) {
+    public static CharSequence parse(CharSequence text) {
         Spannable emojiText;
         if (text instanceof Spannable) {
             emojiText = (Spannable) text;
@@ -80,7 +81,7 @@ public class ZEmojiParser {
                 int start = matcher.start();
                 int end = matcher.end();
 
-                EmojiSpan span = new EmojiSpan(drawable, DynamicDrawableSpan.ALIGN_BOTTOM, fontMetrics);
+                EmojiSpan span = new EmojiSpan(drawable);
                 emojiText.setSpan(span, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
@@ -167,19 +168,19 @@ public class ZEmojiParser {
     }
 
     private static class EmojiSpan extends ImageSpan {
-        private FontMetricsInt fontMetrics;
-        private int size;
 
-        EmojiSpan(EmojiDrawable d, int verticalAlignment, FontMetricsInt original) {
-            super(d, verticalAlignment);
+        private Paint.FontMetricsInt mFontMetricsInt = new Paint.FontMetricsInt();
 
-            fontMetrics = original;
+        EmojiSpan(EmojiDrawable d) {
+            super(d);
+        }
 
-            if (fontMetrics != null) {
-                size = Math.abs(fontMetrics.descent) + Math.abs(fontMetrics.ascent);
-            }
+        @Override
+        public int getSize(@NonNull Paint paint, CharSequence text, int start, int end, FontMetricsInt fm) {
 
-            //Fallback size
+            paint.getFontMetricsInt(mFontMetricsInt);
+
+            int size = Math.abs(mFontMetricsInt.ascent) + Math.abs(mFontMetricsInt.descent);
             if (size == 0) {
                 size = Utils.dp(20);
             }
@@ -187,11 +188,21 @@ public class ZEmojiParser {
             if (getDrawable() != null) {
                 getDrawable().setBounds(0, 0, size, size);
             }
+
+            return size;
         }
 
         @Override
-        public int getSize(@NonNull Paint paint, CharSequence text, int start, int end, FontMetricsInt fm) {
-            return size;
+        public void draw(final Canvas canvas, final CharSequence text, final int start, final int end, final float x, final int top, final int y, final int bottom, final Paint paint) {
+            Drawable b = getDrawable();
+            paint.getFontMetricsInt(mFontMetricsInt);
+
+            canvas.save();
+            int transY = bottom - b.getBounds().bottom -
+                    Math.abs(mFontMetricsInt.bottom - mFontMetricsInt.top - b.getBounds().bottom) / 2;
+            canvas.translate(x, transY);
+            b.draw(canvas);
+            canvas.restore();
         }
     }
 }
