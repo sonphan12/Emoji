@@ -6,7 +6,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.horizon.emoji.R;
-import com.horizon.emoji.emoji.ZEmojiParser;
+
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -15,8 +16,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView textEmoji = findViewById(R.id.textEmoji);
+        TextView normalTextView = findViewById(R.id.textEmoji);
+        ZEmojiTextView emojiTextView = findViewById(R.id.emojiTextView);
+        ZEmojiButton emojiButton = findViewById(R.id.emojiButton);
 
-        textEmoji.setText(ZEmojiParser.parse("g:11::01:ố:11:g:11::01:ố:01:g:11::01:ố:01:g:11::01:ố:01:"));
+        emojiButton.setOnClickListener((view) -> {
+            emojiTextView.setText(emojiButton.getText());
+            normalTextView.setText(emojiTextView.getText().toString());
+            emojiButton.setText(String.format("Emoji :%02d:", new Random().nextInt(88) + 1));
+        });
     }
 }

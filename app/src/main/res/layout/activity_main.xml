@@ -5,6 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:animateLayoutChanges="true"
     android:gravity="center">
 
     <TextView
@@ -12,7 +14,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/black"
-        android:text="sample"
+        android:text="Emoji :10: :10: :10:"
         android:textSize="40sp"/>
 
+    <com.horizon.emoji.ui.ZEmojiTextView
+        android:id="@+id/emojiTextView"
+        android:layout_marginTop="10dp"
+        android:textSize="40sp"
+        android:text="Emoji :10: :10: :10:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.horizon.emoji.ui.ZEmojiButton
+        android:id="@+id/emojiButton"
+        android:text="Emoji :11:"
+        android:textSize="40sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>
